@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purple & Black Slideshow</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top left, #4f0f87, #12020a 60%);
+        color: #f3f3fb;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .slideshow {
+        position: relative;
+        width: min(90vw, 900px);
+        height: min(60vh, 550px);
+        background: #09030f;
+        border: 3px solid #6a33ce;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 0 25px rgba(111, 44, 192, 0.6);
+      }
+      .slides img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+      .slides img.active {
+        opacity: 1;
+      }
+      .controls {
+        position: absolute;
+        width: 100%;
+        bottom: 8px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        z-index: 5;
+      }
+      .controls button {
+        background: rgba(25, 12, 45, 0.8);
+        border: 1px solid #9a6fe6;
+        color: #e2deff;
+        padding: 8px 14px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: bold;
+        user-select: none;
+      }
+      .controls button:hover {
+        background: rgba(150, 103, 239, 0.92);
+        color: #120035;
+      }
+      .caption {
+        position: absolute;
+        bottom: 46px;
+        left: 12px;
+        right: 12px;
+        text-align: center;
+        letter-spacing: 0.5px;
+        font-size: 15px;
+        font-weight: 600;
+        text-shadow: 0 0 16px rgba(0, 0, 0, 0.75);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slideshow" aria-label="Purple and black themed slideshow">
+      <div class="slides">
+        <img src="assets/IMG_7292.JPG" alt="Slide 1" class="active" />
+        <img src="assets/IMG_7293.JPG" alt="Slide 2" />
+        <img src="assets/IMG_7295.JPG" alt="Slide 3" />
+        <img src="assets/IMG_7298.JPG" alt="Slide 4" />
+        <img src="assets/IMG_7300.JPG" alt="Slide 5" />
+        <img src="assets/IMG_7302.JPG" alt="Slide 6" />
+        <img src="assets/IMG_7308.JPG" alt="Slide 7" />
+        <img src="assets/IMG_7317.JPG" alt="Slide 8" />
+        <img src="assets/IMG_7322.JPG" alt="Slide 9" />
+        <img src="assets/IMG_7326.JPG" alt="Slide 10" />
+      </div>
+      <div class="caption">Slide 1 of 10</div>
+      <div class="controls">
+        <button id="prev">Previous</button>
+        <button id="playPause">Pause</button>
+        <button id="next">Next</button>
+      </div>
+    </div>
+
+    <script>
+      const slides = [...document.querySelectorAll(".slides img")];
+      const caption = document.querySelector(".caption");
+      let index = 0;
+      let intervalId = null;
+      const delay = 3500;
+
+      function updateSlide() {
+        slides.forEach((img, i) => img.classList.toggle("active", i === index));
+        caption.textContent = `Slide ${index + 1} of ${slides.length}`;
+      }
+
+      function goTo(newIndex) {
+        index = (newIndex + slides.length) % slides.length;
+        updateSlide();
+      }
+
+      function nextSlide() {
+        goTo(index + 1);
+      }
+
+      function prevSlide() {
+        goTo(index - 1);
+      }
+
+      function startAuto() {
+        intervalId = setInterval(nextSlide, delay);
+        playPauseButton.textContent = "Pause";
+      }
+
+      function stopAuto() {
+        clearInterval(intervalId);
+        intervalId = null;
+        playPauseButton.textContent = "Play";
+      }
+
+      const prevButton = document.getElementById("prev");
+      const nextButton = document.getElementById("next");
+      const playPauseButton = document.getElementById("playPause");
+
+      prevButton.addEventListener("click", () => {
+        prevSlide();
+        stopAuto();
+      });
+      nextButton.addEventListener("click", () => {
+        nextSlide();
+        stopAuto();
+      });
+      playPauseButton.addEventListener("click", () => {
+        if (intervalId) stopAuto();
+        else startAuto();
+      });
+
+      updateSlide();
+      startAuto();
+    </script>
+  </body>
+</html>
